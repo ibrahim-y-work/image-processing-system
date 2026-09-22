@@ -8,4 +8,5 @@ add_executable(image_processing_system main.cpp
         cmake-build-debug/filters.h
         cmake-build-debug/menu.h
         filters.h
-        menu.h)
+        menu.h
+        main.cpp)
