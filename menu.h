@@ -1,0 +1,8 @@
+//
+// Created by ibrahim on 9/22/26.
+//
+
+#ifndef IMAGE_PROCESSING_SYSTEM_MENU_H
+#define IMAGE_PROCESSING_SYSTEM_MENU_H
+
+#endif //IMAGE_PROCESSING_SYSTEM_MENU_H
