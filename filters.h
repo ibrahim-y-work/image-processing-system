@@ -6,10 +6,26 @@
 #define IMAGE_PROCESSING_SYSTEM_FILTERS_H
 #include "Image_Class.h"
 //ibrahim Abdul-Wahab ->1
-void grayscaleConversion(Image& img) {
+void grayscale(Image &image)
+{
 
-
-}
+    for (int i = 0; i < image.width; i++)
+    {
+        for (int j = 0; j < image.height; j++)
+        {
+            unsigned int gray = 0;
+            for (int k = 0; k < image.channels; k++)
+            {
+                gray += image(i, j, k);
+            }
+            gray = gray / 3;
+            for (int k = 0; k < image.channels; k++)
+            {
+                image(i, j, k) = gray;
+            }
+        }
+    }
+};
 //ibrahim Yasser ->2
 void  blackAndWhite(Image& img) {
     int height=img.height;
@@ -37,7 +53,42 @@ void  addingAFrameToThePicture(Image& img) {
 }
 
 //ibrahim Abdul-Wahab ->5
-void flipImage(Image& img) {
+void flipHorizontal(Image &image)
+{
+    for (int i = 0; i < image.width / 2; i++)
+    {
+        for (int j = 0; j < image.height; j++)
+        {
+            for (int k = 0; k < image.channels; k++)
+            {
+                std::swap(image(i, j, k), image(image.width - 1 - i, j, k));
+            }
+        }
+    }
+}
+void flipVertical(Image &image)
+{
+    for (int i = 0; i < image.width; i++)
+    {
+        for (int j = 0; j < image.height / 2; j++)
+        {
+            for (int k = 0; k < image.channels; k++)
+            {
+                std::swap(image(i, j, k), image(i, image.height - 1 - j, k));
+            }
+        }
+    }
+}
+void flipImage(Image& img,char direction) {
+    direction = tolower(direction);
+    if (direction == 'h')
+    {
+        flipHorizontal(img);
+    }
+    else if (direction == 'v')
+    {
+        flipVertical(img);
+    }
 
 }
 
@@ -103,9 +154,27 @@ void resizingImages(Image& img) {
 
 }
 //Ibrahim Abdul-Wahab ->9
-void mergeImages(Image& img) {
+Image merge(Image &image1, Image &image2)
+{
+    int nwidth;
+    int nheight;
 
-}
+    nwidth = std::min(image1.width, image2.width);
+    nheight = std::min(image1.height, image2.height);
+
+    Image image3(nwidth, nheight);
+    for (int i = 0; i < image3.width; i++)
+    {
+        for (int j = 0; j < image3.height; j++)
+        {
+            for (int k = 0; k < image3.channels; k++)
+            {
+                image3(i, j, k) = (image1(i, j, k) + image2(i, j, k)) / 2;
+            }
+        }
+    }
+    return image3;
+};
 //ibrahim Yasser -> 10
 void detectImageEdges(Image& img) {
     Image gray(img.width, img.height);
@@ -157,9 +226,18 @@ void blurImages(Image& img) {
 
 }
 //ibrahim Abdul-Wahab ->13
-void  naturalSunlight(Image& img) {
-
-}
+void natural_sunlight(Image &image)
+{
+    for (int i = 0; i < image.width; i++)
+    {
+        for (int j = 0; j < image.height; j++)
+        {
+            image(i, j, 0) = std::min(255, image(i, j, 0) + 30);
+            image(i, j, 1) = std::min(255, image(i, j, 1) + 20);
+            image(i, j, 2) = std::max(0, image(i, j, 2) - 10);
+        }
+    }
+};
 
 //Ibrahim Yasser ->14
 void  TVImages(Image& img) {
@@ -197,10 +275,39 @@ void convertToInfrared(Image& img) {
 }
 
 
-void imageSkewing(Image& img) {
-
-}
-
+//Ibrahim Abdulwahab -> 17
+void imageSkewing(Image &image, double angle)
+{
+    double radian = angle * (3.141592653589793 / 180.0);
+    double shift = tan(radian) * 0.7;
+    int nwidht = image.width + abs(shift * image.height);
+    Image nimage(nwidht, image.height);
+    for (int i = 0; i < nimage.width; i++)
+    {
+        for (int j = 0; j < nimage.height; j++)
+        {
+            for (int k = 0; k < nimage.channels; k++)
+            {
+                nimage(i, j, k) = 255;
+            }
+        }
+    }
+    for (int i = 0; i < image.width; i++)
+    {
+        for (int j = 0; j < image.height; j++)
+        {
+            int x = i + (image.height - 1 - j) * shift;
+            if (x >= 0 && x < nimage.width)
+            {
+                for (int k = 0; k < image.channels; k++)
+                {
+                    nimage(x, j, k) = image(i, j, k);
+                }
+            }
+        }
+    }
+    nimage.saveImage("Skewing1.png");
+};
 void  oilPainting(Image& img) {
 
 }
