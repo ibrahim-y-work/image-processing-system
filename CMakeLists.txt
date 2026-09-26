@@ -5,8 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(image_processing_system main.cpp
         Image_Class.h
-        cmake-build-debug/filters.h
-        cmake-build-debug/menu.h
         filters.h
         menu.h
         main.cpp)
