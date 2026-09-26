@@ -7,7 +7,6 @@
 #include <vector>
 #include "Image_Class.h"
 
-#include "Image_Class.h"
 //ibrahim Abdul-Wahab ->1
 void grayscale(Image &image)
 {
@@ -400,10 +399,6 @@ void imageSkewing(Image &image, double angle)
     }
     nimage.saveImage("Skewing1.png");
 };
-void  oilPainting(Image& img) {
-void imageSkewing(Image& img) {
-
-}
 
 //Toqa->18
 void oilPainting(Image &img, int radius, int numLevels) {
