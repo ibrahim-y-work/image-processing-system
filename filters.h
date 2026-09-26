@@ -5,6 +5,7 @@
 #ifndef IMAGE_PROCESSING_SYSTEM_FILTERS_H
 #define IMAGE_PROCESSING_SYSTEM_FILTERS_H
 #include <vector>
+#include "Image_Class.h"
 
 //ibrahim Abdul-Wahab ->1
 void grayscaleConversion(Image& img) {
