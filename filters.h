@@ -63,7 +63,71 @@ void invertImage(Image &img) {
 }
 
 //Hatem ->4
-void  addingAFrameToThePicture(Image& img) {
+void  addingADecoratedFrameToThePicture(Image& img) {
+
+    for (int r  = 0 ; r < img.height ; r ++) {
+
+        for (int c = 0 ; c < img.width ; c ++) {
+
+            if (!((c>(img.width*0.035) && c <(img.width*0.965))&&(r>img.height*0.035)&&(r<img.height*0.965))) {
+                img.imageData[(r*img.width +c)*3] = 0 ;
+                img.imageData[(r*img.width +c)*3+1] = 0 ;
+            }
+            if (r > img.height*0.035 && r <img.height*0.04) {
+
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+
+            }
+            if (r > img.height*(1-0.04) && r < img.height*(1-0.035)) {
+
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+
+            }
+            if (c>img.width*0.035 && c < img.width*0.04) {
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+            }
+            if (c<img.width*(1-0.035) && c > img.width*(1-0.04)) {
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+            }
+            if ((( r < img.height*0.08 ) || ( r > img.height*(1-0.08) ) ) && (c<img.width*0.05 && c > img.width*0.045) ) {
+
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+
+            }
+            if ((( r < img.height*0.08 ) || ( r > img.height*(1-0.08) ) ) && (c>img.width*(1-0.05) && c < img.width*(1-0.045)) ) {
+
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+
+            }
+            if ((( c < img.width*0.08 ) || ( c > img.width*(1-0.08) ) ) && (r<img.height*0.05 && r > img.height*0.045) ) {
+
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+
+            }
+            if ((( c < img.width*(0.08) ) || ( c > img.width*(1-0.08) ) ) && (r>img.height*(1-0.05) && r < img.height*(1-0.045)) ) {
+
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+
+            }
+        }
+
+    }
 
 }
 
@@ -214,8 +278,48 @@ void darkenAndLightenImage(Image &img, bool dark, short levelOfLight) {
     }
 }
 //Hatem ->8
-void resizingImages(Image& img) {
+void resizingImages(Image& img , double ratio) {
+    short newWidth = (ratio/100)*img.width , newHeight =(ratio/100)*img.height ;
+    unsigned char* newData = (unsigned char*)malloc(newWidth * newHeight * 3);
 
+    int sx , sy ;
+    for (int x = 0 ; x < newWidth ; x ++) {
+        sx  = x * img.width / newWidth ;
+        for (int y = 0 ; y < newHeight ;  y ++) {
+            sy = y * img.height / newHeight ;
+            for (int c = 0 ; c  < 3 ; c ++) {
+
+                newData[(y*newWidth + x)*3 + c ] = img.imageData[(sy*img.width + sx)*3 + c ] ;
+            }
+        }
+    }
+
+    stbi_image_free(img.imageData) ;
+    img.imageData = newData ;
+    img.height = newHeight ;
+    img.width = newWidth ;
+
+}
+void resizingImages(Image &img,int newHeight , int newWidth) {
+
+    unsigned char* newData = (unsigned char*)malloc(newWidth * newHeight * 3);
+
+    int sx , sy ;
+    for (int x = 0 ; x < newWidth ; x ++) {
+        sx  = x * img.width / newWidth ;
+        for (int y = 0 ; y < newHeight ;  y ++) {
+            sy = y * img.height / newHeight ;
+            for (int c = 0 ; c  < 3 ; c ++) {
+
+                newData[(y*newWidth + x)*3 + c ] = img.imageData[(sy*img.width + sx)*3 + c ] ;
+            }
+        }
+    }
+
+    stbi_image_free(img.imageData) ;
+    img.imageData = newData ;
+    img.height = newHeight ;
+    img.width = newWidth ;
 }
 //Ibrahim Abdul-Wahab ->9
 Image merge(Image &image1, Image &image2)
@@ -296,13 +400,37 @@ Image cropImages(Image &img, Image &img2, int x, int y, int w, int h) {
             img2.setPixel(newx, newy, 2, B);
         }
     }
-
     return img2;
 }
 
-
 //Hatem ->12
 void blurImages(Image& img) {
+    unsigned char* newData = (unsigned char*)malloc(img.height * img.width * 3);
+    for (int r = 0 ; r <  img.height; r ++) {
+        for (int c = 0 ; c <  img.width; c ++) {
+            int R = 0 , G = 0 , B = 0 ;
+            int cnt = 0 ;
+            for (int dr = -10 ; dr <= 10 ; dr ++) {
+                for (int dc = -10 ; dc <= 10 ;dc ++) {
+
+                    int nr = r + dr ;
+                    int nc = c + dc ;
+
+                    if (nr >= 0 && nr <img.height && nc >=0 && nc < img.width) {
+                        int index = (nr*img.width+nc)*3 ;
+                        R += img.imageData[index] ;
+                        G += img.imageData[index + 1] ;
+                        B += img.imageData[index + 2] ;
+
+                        cnt ++ ;
+                    }
+                }
+            }
+            newData[(r*img.width+c)*3] =  R/cnt ; newData[(r*img.width+c)*3+1] = G/cnt ; newData[(r*img.width+c)*3+2] = B/cnt ;
+        }
+    }
+    stbi_image_free(img.imageData) ;
+    img.imageData = newData ;
 
 }
 //ibrahim Abdul-Wahab ->13
@@ -362,7 +490,37 @@ void convertToPurple(Image &img) {
 
 //Hatem -> 16
 void convertToInfrared(Image& img) {
+    for (int r = 0 ; r < img.height ; r ++) {
+        for (int  c = 0 ; c  <  img.width  ; c ++) {
 
+            int idx = (r*img.width+c)*3;
+
+            double intensity = 0.299*img.imageData[idx]
+                              + 0.587*img.imageData[idx+1]
+                              + 0.114*img.imageData[idx+2];
+
+            double R, G, B;
+
+            if (intensity < 128 ) {
+                double t = intensity/128.0 ;
+                R = t*(200) ;
+                G = 0 ;
+                B = -20*t + 20 ;
+
+            }else {
+                double t = (intensity-128)/(255.0-128.0) ;
+                R  = t*(255-200) + 200 ;
+                G = 200*t  ;
+                B = t*220 ;
+
+            }
+
+
+            img.imageData[idx]   = R;
+            img.imageData[idx+1] = G;
+            img.imageData[idx+2] = B;
+        }
+    }
 }
 
 
