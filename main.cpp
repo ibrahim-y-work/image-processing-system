@@ -21,7 +21,7 @@ File description:
 2. Ibrahim Abdel-Wahab | ID: 20250004 | Section: S31, S32 | Monday 09:30   | Table B
    Filters: grayscale (1), flipImage (5), merge (9), natural_sunlight (13), imageSkewing (17)
 
-3. Ibrahim Yasser      | ID: 20250007 | Section: S7, S8   | Thursday 08:00 | Table A
+3. Ibrahim Yasser      | ID: 20250007 | Section: S43, S44   | Thursday 08:00 | Table A
    Filters: blackAndWhite (2), rotateImage (6), detectImageEdges (10), TVImages (14)
 
 4. Hatem Ashraf        | ID: 20250173 | Section: S7, S8   | Thursday 08:00 | Table A
