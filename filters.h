@@ -39,6 +39,10 @@ void  blackAndWhite(Image& img) {
             short g = img.getPixel(i, j, 1);
             short b = img.getPixel(i, j, 2);
             short avg=(r+g+b)/3;
+            if (avg>128)
+                avg=255;
+            else
+                avg=0;
 
             for (short color=0;color<3;color++)
                 img.setPixel(i,j,color,avg);
@@ -63,156 +67,73 @@ void invertImage(Image &img) {
 }
 
 //Hatem ->4
-bool isInsideFrame(Image& img, int r, int c,
-                   float left, float right,
-                   float top, float bottom) {
-
-    return (c > img.width * left && c < img.width * right) &&
-           (r > img.height * top && r < img.height * bottom);
-}
-
-
-bool isHorizontalLine(Image& img, int r,
-                      float start, float end) {
-
-    return r > img.height * start &&
-           r < img.height * end;
-}
-
-
-bool isVerticalLine(Image& img, int c,
-                    float start, float end) {
-
-    return c > img.width * start &&
-           c < img.width * end;
-}
-
-
-bool isVerticalDecoration(Image& img, int r, int c,
-                           float verticalLimit,
-                           float startX, float endX) {
-
-    return ((r < img.height * verticalLimit) ||
-            (r > img.height * (1 - verticalLimit))) &&
-           (c > img.width * startX &&
-            c < img.width * endX);
-}
-
-
-bool isHorizontalDecoration(Image& img, int r, int c,
-                            float horizontalLimit,
-                            float startY, float endY) {
-
-    return ((c < img.width * horizontalLimit) ||
-            (c > img.width * (1 - horizontalLimit))) &&
-           (r > img.height * startY &&
-            r < img.height * endY);
-}
-
-void addingADecoratedFrameToThePicture(Image& img, short R, short G, short B) {
-
-    for (int r = 0; r < img.height; r++) {
-
-        for (int c = 0; c < img.width; c++) {
-
-            if (!isInsideFrame(img, r, c,
-                               0.035, 0.965,
-                               0.035, 0.965)) {
-
-                img.imageData[(r * img.width + c) * 3] = R;
-                img.imageData[(r * img.width + c) * 3 + 1] = G;
-                img.imageData[(r * img.width + c) * 3 + 2] = B;
-            }
-
-
-
-            if (isHorizontalLine(img, r, 0.035, 0.04)) {
-
-                img.imageData[(r * img.width + c) * 3] = 255;
-                img.imageData[(r * img.width + c) * 3 + 1] = 255;
-                img.imageData[(r * img.width + c) * 3 + 2] = 255;
-            }
-
-            if (isHorizontalLine(img, r, 0.96, 0.965)) {
-
-                img.imageData[(r * img.width + c) * 3] = 255;
-                img.imageData[(r * img.width + c) * 3 + 1] = 255;
-                img.imageData[(r * img.width + c) * 3 + 2] = 255;
-            }
-
-            if (isVerticalLine(img, c, 0.035, 0.04)) {
-
-                img.imageData[(r * img.width + c) * 3] = 255;
-                img.imageData[(r * img.width + c) * 3 + 1] = 255;
-                img.imageData[(r * img.width + c) * 3 + 2] = 255;
-            }
-
-            if (isVerticalLine(img, c, 0.96, 0.965)) {
-
-                img.imageData[(r * img.width + c) * 3] = 255;
-                img.imageData[(r * img.width + c) * 3 + 1] = 255;
-                img.imageData[(r * img.width + c) * 3 + 2] = 255;
-            }
-
-
-            if (isVerticalDecoration(img, r, c,
-                                     0.08, 0.045, 0.05)) {
-
-                img.imageData[(r * img.width + c) * 3] = 255;
-                img.imageData[(r * img.width + c) * 3 + 1] = 255;
-                img.imageData[(r * img.width + c) * 3 + 2] = 255;
-            }
-
-
-            if (isVerticalDecoration(img, r, c,
-                                     0.08, 0.95, 0.955)) {
-
-                img.imageData[(r * img.width + c) * 3] = 255;
-                img.imageData[(r * img.width + c) * 3 + 1] = 255;
-                img.imageData[(r * img.width + c) * 3 + 2] = 255;
-            }
-
-
-            if (isHorizontalDecoration(img, r, c,
-                                        0.08, 0.045, 0.05)) {
-
-                img.imageData[(r * img.width + c) * 3] = 255;
-                img.imageData[(r * img.width + c) * 3 + 1] = 255;
-                img.imageData[(r * img.width + c) * 3 + 2] = 255;
-            }
-
-
-            if (isHorizontalDecoration(img, r, c,
-                                        0.08, 0.95, 0.955)) {
-
-                img.imageData[(r * img.width + c) * 3] = 255;
-                img.imageData[(r * img.width + c) * 3 + 1] = 255;
-                img.imageData[(r * img.width + c) * 3 + 2] = 255;
-            }
-        }
-    }
-}
-
-void  addingASimpleFrameToThePicture(Image& img,short R , short G ,short B) {
-
+void  addingADecoratedFrameToThePicture(Image& img) {
 
     for (int r  = 0 ; r < img.height ; r ++) {
 
         for (int c = 0 ; c < img.width ; c ++) {
 
-            if (!isInsideFrame(img, r, c,
-                                 0.035, 0.965,
-                                 0.035, 0.965)) {
+            if (!((c>(img.width*0.035) && c <(img.width*0.965))&&(r>img.height*0.035)&&(r<img.height*0.965))) {
+                img.imageData[(r*img.width +c)*3] = 0 ;
+                img.imageData[(r*img.width +c)*3+1] = 0 ;
+            }
+            if (r > img.height*0.035 && r <img.height*0.04) {
 
-                img.imageData[(r * img.width + c) * 3] = R;
-                img.imageData[(r * img.width + c) * 3 + 1] = G;
-                img.imageData[(r * img.width + c) * 3 + 2] = B;
-                                 }
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
 
+            }
+            if (r > img.height*(1-0.04) && r < img.height*(1-0.035)) {
+
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+
+            }
+            if (c>img.width*0.035 && c < img.width*0.04) {
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+            }
+            if (c<img.width*(1-0.035) && c > img.width*(1-0.04)) {
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+            }
+            if ((( r < img.height*0.08 ) || ( r > img.height*(1-0.08) ) ) && (c<img.width*0.05 && c > img.width*0.045) ) {
+
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+
+            }
+            if ((( r < img.height*0.08 ) || ( r > img.height*(1-0.08) ) ) && (c>img.width*(1-0.05) && c < img.width*(1-0.045)) ) {
+
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+
+            }
+            if ((( c < img.width*0.08 ) || ( c > img.width*(1-0.08) ) ) && (r<img.height*0.05 && r > img.height*0.045) ) {
+
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+
+            }
+            if ((( c < img.width*(0.08) ) || ( c > img.width*(1-0.08) ) ) && (r>img.height*(1-0.05) && r < img.height*(1-0.045)) ) {
+
+                img.imageData[(r*img.width +c)*3] = 255 ;
+                img.imageData[(r*img.width +c)*3+1] = 255 ;
+                img.imageData[(r*img.width +c)*3+2] = 255 ;
+
+            }
         }
-    }
-}
 
+    }
+
+}
 
 //ibrahim Abdul-Wahab ->5
 void flipHorizontal(Image &image)
@@ -468,8 +389,7 @@ void detectImageEdges(Image& img) {
 }
 
 //Toqa ->11
-Image cropImage(Image &img, int x, int y, int w, int h) {
-    Image croppedImg(w,h);
+Image cropImages(Image &img, Image &img2, int x, int y, int w, int h) {
     for (int i = x; i < x + w; i++) {
         for (int j = y; j < y + h; j++) {
             int R = img.getPixel(i, j, 0);
@@ -479,16 +399,16 @@ Image cropImage(Image &img, int x, int y, int w, int h) {
             int newx = i - x;
             int newy = j - y;
 
-            croppedImg.setPixel(newx, newy, 0, R);
-            croppedImg.setPixel(newx, newy, 1, G);
-            croppedImg.setPixel(newx, newy, 2, B);
+            img2.setPixel(newx, newy, 0, R);
+            img2.setPixel(newx, newy, 1, G);
+            img2.setPixel(newx, newy, 2, B);
         }
     }
-    return croppedImg;
+    return img2;
 }
 
 //Hatem ->12
-void blurImage(Image& img) {
+void blurImages(Image& img) {
     unsigned char* newData = (unsigned char*)malloc(img.height * img.width * 3);
     for (int r = 0 ; r <  img.height; r ++) {
         for (int c = 0 ; c <  img.width; c ++) {
@@ -518,7 +438,7 @@ void blurImage(Image& img) {
 
 }
 //ibrahim Abdul-Wahab ->13
-void naturalSunlight(Image &image)
+void natural_sunlight(Image &image)
 {
     for (int i = 0; i < image.width; i++)
     {
@@ -609,7 +529,7 @@ void convertToInfrared(Image& img) {
 
 
 //Ibrahim Abdulwahab -> 17
-Image imageSkewing(Image &image, double angle)
+void imageSkewing(Image &image, double angle)
 {
     double radian = angle * (3.141592653589793 / 180.0);
     double shift = tan(radian) * 0.7;
@@ -639,8 +559,7 @@ Image imageSkewing(Image &image, double angle)
             }
         }
     }
-    return nimage;
-
+    nimage.saveImage("Skewing1.png");
 };
 
 //Toqa->18
